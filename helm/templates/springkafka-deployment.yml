@@ -14,6 +14,8 @@ spec:
     metadata:
       labels:
         app: {{ .Values.app.name }}
+      annotations:
+        ad.datadoghq.com/{{ .Values.app.name }}.logs: '[{"source": "java", "service": "{{ .Values.app.name }}", "log_processing_rules": [{"type": "multi_line", "name": "log_start_with_date", "pattern" : "\\d{4}-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])"}]}]'
     spec:
       containers:
       - image: {{ .Values.image.repository }}:{{ .Values.image.tag }}

@@ -1,3 +1,14 @@
 kafka:
   bootstrap-servers: localhost:9092
   topic-name: users
+
+
+logging:
+  level:
+    root: info
+    org.springframework.web: INFO
+  path: logs
+  file: ${logging.path}/springkafkak8s.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %yellow(%logger{36}) - %msg%n"
+    console: "%d{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %yellow(%logger{36}) - %msg%n"
