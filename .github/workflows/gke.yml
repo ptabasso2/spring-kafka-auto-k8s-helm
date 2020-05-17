@@ -1,0 +1,78 @@
+name: Build and Deploy to GKE
+
+on:
+  push:
+    branches:
+    - dockerpull
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: pejman-sncf-cluster-1   # TODO: update to cluster name
+  GKE_ZONE: europe-west3-a  # TODO: update to cluster zone
+  DH_PWD: ${{ secrets.DOCKERHUB_PWD }}
+  IMAGE: static-site
+
+jobs:
+  setup-build-publish-deploy:
+    name: Setup, Build, Publish, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+ 
+
+    - name: Setup java
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    # Setup gcloud CLI    
+    - name: Setup gcloud cli  
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        project_id: ${{ secrets.GKE_PROJECT }}
+
+    - name: Running gcloud commands 
+      run: |-
+        gcloud --quiet auth configure-docker
+        # Get the GKE credentials so we can deploy to the cluster
+        gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+        gcloud info
+        kubectl version
+
+
+    - name: Check environment
+      run: |-
+        pwd
+        hostname
+        id
+        ls -lrt
+        
+    - name: Build jar
+      run: |-
+        gradle build
+        
+    - name: Build docker image to local registry 
+      run: |-
+        docker build -f Dockerfile.springkafka -t pejdd/springkafka:v1 .
+        docker login -u=pejdd -p=$DH_PWD
+        docker push pejdd/springkafka:v1
+
+    - name: Build
+      run: |-
+        wget https://get.helm.sh/helm-v3.0.2-linux-amd64.tar.gz
+        tar xvf helm-v3.0.2-linux-amd64.tar.gz
+        sudo mv linux-amd64/helm /usr/local/bin
+        sudo rm -rf linux-amd64 helm-v3.0.2-linux-amd64.tar.gz
+        sudo helm repo add stable https://kubernetes-charts.storage.googleapis.com/
+        sudo helm repo update
+        sudo helm version
+        kubectl get pods -o wide
+        java -version
+        # Include docker push to docker hub   
+        helm install sk ./helm/
