@@ -1,0 +1,17 @@
+FROM adoptopenjdk/openjdk11:ubuntu-nightly-slim
+
+RUN apt update \
+ && apt -y install net-tools iputils-ping curl vim procps netcat wget gnupg2 apt-transport-https sudo lsof unzip
+
+RUN mkdir /app
+WORKDIR /app
+
+ENV KAFKA_BROKER=kafka
+
+
+COPY ./build/libs/spring-kafka-auto-k8s.jar spring-kafka-auto-k8s.jar
+RUN wget -O dd-java-agent.jar 'https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.datadoghq&a=dd-java-agent&v=LATEST'
+
+
+EXPOSE 8088
+CMD java -javaagent:./dd-java-agent.jar -Ddd.service=springkafkapej -Dkafka.bootstrap-servers=$KAFKA_BROKER:9092 -Ddd.env=datadoghq.com -Ddd.trace.http.client.split-by-domain=true -jar spring-kafka-auto-k8s.jar --server.port=8088

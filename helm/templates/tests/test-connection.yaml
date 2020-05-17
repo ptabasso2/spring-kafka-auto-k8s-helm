@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "springkafka.fullname" . }}-test-connection"
+  labels:
+{{ include "springkafka.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "springkafka.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never

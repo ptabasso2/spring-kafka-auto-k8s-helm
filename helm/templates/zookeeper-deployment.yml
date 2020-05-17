@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Values.zookeeper.name }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.zookeeper.labels.name }}
+    spec:
+      containers:
+      - env:
+        - name: ZOOKEEPER_ID
+          value: "1"
+        - name: ZOOKEEPER_SERVER_1
+          value: {{ .Values.zookeeper.name }}
+        name: {{ .Values.zookeeper.name }}
+        image: digitalwonderland/zookeeper
+        ports:
+        - containerPort: {{ .Values.zookeeper.port }}
