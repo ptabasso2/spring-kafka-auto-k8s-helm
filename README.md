@@ -115,7 +115,7 @@ Once done, we can test the application.
 
 ### _Run the tests_
 
-Open a new terminal window and run the following curl command:
+Open a new terminal window and run the following curl command **multiple times**:
 
 ```
 COMP10619:Kafka pejman.tabassomi$ curl 34.89.190.246:8088/test
