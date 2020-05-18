@@ -1,7 +1,8 @@
 FROM adoptopenjdk/openjdk11:ubuntu-nightly-slim
 
 RUN apt update \
- && apt -y install net-tools iputils-ping curl vim procps netcat wget gnupg2 apt-transport-https sudo lsof unzip
+ && apt -y install net-tools iputils-ping curl vim procps netcat wget gnupg2 apt-transport-https sudo lsof unzip \
+ && echo "alias ll='ls -lrt'" >> /root/.bashrc
 
 RUN mkdir /app
 WORKDIR /app
@@ -14,4 +15,4 @@ RUN wget -O dd-java-agent.jar 'https://repository.sonatype.org/service/local/art
 
 
 EXPOSE 8088
-CMD java -javaagent:./dd-java-agent.jar -Ddd.service=springkafkapej -Dkafka.bootstrap-servers=$KAFKA_BROKER:9092 -Ddd.env=datadoghq.com -Ddd.trace.http.client.split-by-domain=true -jar spring-kafka-auto-k8s.jar --server.port=8088
+CMD java -javaagent:./dd-java-agent.jar -Ddd.service=springkafkak8s -Dkafka.bootstrap-servers=$KAFKA_BROKER:9092 -Ddd.env=datadoghq.com -Ddd.trace.http.client.split-by-domain=true -jar spring-kafka-auto-k8s.jar --server.port=8088
