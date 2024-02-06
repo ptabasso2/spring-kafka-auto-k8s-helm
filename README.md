@@ -2,13 +2,11 @@
 
 [![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=com.codenotfound%3Aspring-kafka-hello-world&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.codenotfound%3Aspring-kafka-hello-world)
 
-
-A detailed step-by-step tutorial on how to implement an Apache Kafka Consumer and Producer using Spring Kafka and Spring Boot in a kubernetes infrastructure (GKE)
-<br>In this tutorial we will also enable distributed tracing using the Datadog java agent (automatic instrumentation).
-This tutorial assumes that 
-+ You already have access to a kubernetes cluster. The example below has been tested on GKE. But you can replicate the same instructions on any type of clusters managed or not.
-+ Helm tiller is deployed on the cluster (see instructions below)
-+ The Kubernetes Datadog cluster agent has already been deployed (Either through a Daemonset or Helm). Note that there is a new way of deploying the Datadog agent relying k8s operator (See detailed instructions: [Kubernetes](https://docs.datadoghq.com/agent/kubernetes/?tab=helm))
+A detailed step-by-step tutorial on how to implement an Apache Kafka Consumer and Producer using Spring Kafka and Spring Boot in a Kubernetes infrastructure (GKE). 
+<br>In this tutorial, we will also enable distributed tracing using the Datadog Java agent (automatic instrumentation). This tutorial assumes that
++ You already have access to a Kubernetes cluster. The example below has been tested on GKE, but you can replicate the same instructions on any type of cluster, whether managed or not.
++ Helm Tiller is deployed on the cluster (see instructions below).
++ The Kubernetes Datadog cluster agent has already been deployed, either through a DaemonSet or Helm. Note that there is a new method of deploying the Datadog agent relying on the Kubernetes operator (see detailed instructions: [Kubernetes]).(https://docs.datadoghq.com/agent/kubernetes/?tab=helm))
   
 
 ### _Preliminary tasks_
